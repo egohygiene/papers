@@ -1,0 +1,77 @@
+name: Release Paper
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+      - "reflector-v*.*.*"
+
+  workflow_dispatch:
+    inputs:
+      paper:
+        description: "Paper directory"
+        required: true
+        default: "papers/reflector"
+
+      tag:
+        description: "Release tag"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and Release Paper
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Determine paper metadata
+        id: vars
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            PAPER_DIR="${{ github.event.inputs.paper }}"
+            TAG="${{ github.event.inputs.tag }}"
+          else
+            PAPER_DIR="papers/reflector"
+            TAG="${{ github.ref_name }}"
+          fi
+
+          PAPER_NAME="$(basename "${PAPER_DIR}")"
+
+          echo "paper_dir=${PAPER_DIR}" >> "$GITHUB_OUTPUT"
+          echo "paper_name=${PAPER_NAME}" >> "$GITHUB_OUTPUT"
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+          echo "release_name=${PAPER_NAME} ${TAG}" >> "$GITHUB_OUTPUT"
+          echo "pdf_path=${PAPER_DIR}/build/paper.pdf" >> "$GITHUB_OUTPUT"
+          echo "asset_name=${PAPER_NAME}-${TAG}.pdf" >> "$GITHUB_OUTPUT"
+
+      - name: Build LaTeX PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: paper.tex
+          working_directory: ${{ steps.vars.outputs.paper_dir }}
+          extra_system_packages: "biber"
+          args: >-
+            -pdf
+            -bibtex
+            -outdir=build
+            -interaction=nonstopmode
+            -file-line-error
+
+      - name: Rename release artifact
+        run: |
+          cp \
+            "${{ steps.vars.outputs.pdf_path }}" \
+            "${{ steps.vars.outputs.asset_name }}"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.vars.outputs.tag }}
+          name: ${{ steps.vars.outputs.release_name }}
+          generate_release_notes: true
+          files: ${{ steps.vars.outputs.asset_name }}

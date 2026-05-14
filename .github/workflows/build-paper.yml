@@ -2,21 +2,25 @@ name: Build Paper
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
     paths:
       - "papers/**"
-      - "scripts/build-paper.sh"
-      - ".github/workflows/build-paper.yaml"
+      - "scripts/**"
+      - ".github/workflows/build-paper.yml"
+
   pull_request:
-    branches: [main]
+    branches:
+      - main
     paths:
       - "papers/**"
-      - "scripts/build-paper.sh"
-      - ".github/workflows/build-paper.yaml"
+      - "scripts/**"
+      - ".github/workflows/build-paper.yml"
+
   workflow_dispatch:
     inputs:
       paper:
-        description: "Paper directory (e.g. papers/reflector)"
+        description: "Paper directory"
         required: false
         default: "papers/reflector"
 
@@ -25,25 +29,33 @@ permissions:
 
 jobs:
   build:
-    name: Build ${{ matrix.paper }}
+    name: Build Paper
     runs-on: ubuntu-latest
+
     strategy:
+      fail-fast: false
       matrix:
         paper:
           - papers/reflector
-      fail-fast: false
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install LaTeX (TeX Live)
+      - name: Set artifact names
+        id: vars
+        run: |
+          PAPER_NAME="$(basename "${{ matrix.paper }}")"
+
+          echo "paper_name=${PAPER_NAME}" >> "$GITHUB_OUTPUT"
+          echo "pdf_artifact=${PAPER_NAME}-pdf" >> "$GITHUB_OUTPUT"
+          echo "build_artifact=${PAPER_NAME}-build-artifacts" >> "$GITHUB_OUTPUT"
+
+      - name: Build LaTeX PDF
         uses: xu-cheng/latex-action@v3
         with:
           root_file: paper.tex
           working_directory: ${{ matrix.paper }}
-          latexmk_use_lualatex: false
-          latexmk_shell_escape: false
           extra_system_packages: "biber"
           args: >-
             -pdf
@@ -53,17 +65,19 @@ jobs:
             -file-line-error
 
       - name: Upload PDF artifact
-        uses: actions/upload-artifact@v4
         if: always()
+        uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.paper == 'papers/reflector' && 'reflector-pdf' || format('{0}-pdf', replace(matrix.paper, '/', '-')) }}
+          name: ${{ steps.vars.outputs.pdf_artifact }}
           path: ${{ matrix.paper }}/build/paper.pdf
+          if-no-files-found: error
           retention-days: 30
 
-      - name: Upload build logs on failure
-        uses: actions/upload-artifact@v4
+      - name: Upload build artifacts on failure
         if: failure()
+        uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.paper == 'papers/reflector' && 'reflector-build-artifacts' || format('{0}-build-artifacts', replace(matrix.paper, '/', '-')) }}
+          name: ${{ steps.vars.outputs.build_artifact }}
           path: ${{ matrix.paper }}/build/
+          if-no-files-found: warn
           retention-days: 7

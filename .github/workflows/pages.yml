@@ -1,0 +1,93 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "docs/**"
+      - "papers/**"
+      - ".github/workflows/pages.yml"
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy Pages
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build reflector PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: paper.tex
+          working_directory: papers/reflector
+          extra_system_packages: "biber"
+          args: >-
+            -pdf
+            -bibtex
+            -outdir=build
+            -interaction=nonstopmode
+            -file-line-error
+
+      - name: Assemble Pages site
+        run: |
+          mkdir --parents _site/papers/reflector
+
+          if [[ -d docs ]]; then
+            cp --recursive docs/. _site/
+          fi
+
+          if [[ -f papers/reflector/build/paper.pdf ]]; then
+            cp \
+              papers/reflector/build/paper.pdf \
+              _site/papers/reflector/reflector.pdf
+          fi
+
+          cat > _site/index.html <<EOF
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="utf-8">
+            <title>papers</title>
+          </head>
+          <body>
+            <h1>papers</h1>
+            <ul>
+              <li>
+                <a href="papers/reflector/reflector.pdf">
+                  reflector
+                </a>
+              </li>
+            </ul>
+          </body>
+          </html>
+          EOF
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
