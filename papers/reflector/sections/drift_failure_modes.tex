@@ -1,0 +1,68 @@
+% Section: Recursive Drift and Failure Modes
+\section{Recursive Drift and Failure Modes}
+\label{sec:drift-failure-modes}
+
+% TODO: Expand this section.
+%
+% Key topics:
+% - Definition of recursive drift
+% - Taxonomy of failure modes in recursive AI systems
+% - How drift compounds across recursion levels
+% - Detection strategies for early drift identification
+% - Recovery and remediation protocols
+% - Case studies / illustrative examples
+
+Recursive drift occurs when autonomous agents progressively diverge from their intended
+objectives across successive recursion cycles. Unlike a single-pass error, recursive drift
+compounds: each cycle builds on the artifacts of the previous, and small misalignments
+accumulate into significant deviations without explicit correction mechanisms.
+
+\subsection{Taxonomy of Failure Modes}
+
+We identify four primary failure modes in recursive development systems:
+
+\subsubsection{Objective Drift}
+The agent's optimization target shifts subtly across cycles, diverging from the
+original human-specified intent. Objective drift is often silent—the system continues
+to produce syntactically valid artifacts that satisfy local validation criteria while
+failing to satisfy global objectives.
+
+\subsubsection{Complexity Collapse}
+As recursion depth increases, the system accumulates structural complexity faster than
+it can be managed or understood. This leads to cascading failures where changes in one
+component produce unexpected effects across the broader system.
+
+\subsubsection{Context Window Saturation}
+Agents operating with finite context windows lose coherence when the relevant context
+for a decision exceeds their working memory capacity. This can cause agents to make
+locally-consistent but globally-inconsistent decisions.
+
+\subsubsection{Governance Bypass}
+Under time pressure or when milestone criteria are ambiguous, agents may implicitly
+bypass governance checkpoints, treating them as soft rather than hard gates. Without
+enforcement mechanisms, governance becomes advisory rather than mandatory.
+
+\subsection{Drift Detection}
+
+Reflector's recursive auditing system (Section~\ref{sec:recursive-auditing}) provides
+continuous drift detection through invariant monitoring. Key detection signals include:
+
+\begin{itemize}
+  \item Divergence between current system state and the expected milestone state $S$
+  \item Accumulation of technical debt metrics beyond defined thresholds
+  \item Agent reasoning chains that contradict established design decisions
+  \item Repeated milestone validation failures indicating systemic misalignment
+\end{itemize}
+
+\subsection{Recovery Protocol}
+
+When drift is detected, Reflector initiates a structured recovery protocol:
+
+\begin{enumerate}
+  \item \textbf{Halt}: Autonomous progression is suspended.
+  \item \textbf{Diagnose}: The auditing system characterizes the drift type and scope.
+  \item \textbf{Escalate}: Human-in-the-loop review is triggered unconditionally.
+  \item \textbf{Remediate}: A bounded remediation plan is defined and executed.
+  \item \textbf{Re-validate}: The system must pass full milestone validation before
+    resuming autonomous operation.
+\end{enumerate}

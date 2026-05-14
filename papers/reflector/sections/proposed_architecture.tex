@@ -1,0 +1,56 @@
+% Section: Proposed Architecture
+\section{Proposed Architecture}
+\label{sec:proposed-architecture}
+
+% TODO: Expand this section with architecture diagram references.
+%
+% Key topics:
+% - High-level architecture of a Reflector-compliant system
+% - Component descriptions
+% - Data flows and interaction protocols
+% - Reference implementation considerations
+% - Integration with existing development toolchains
+
+The Reflector architecture defines a layered governance system that wraps around
+existing AI-augmented development workflows without requiring fundamental changes
+to the underlying agent capabilities.
+
+\subsection{Architecture Overview}
+
+A Reflector-compliant system consists of four primary layers:
+
+\begin{enumerate}
+  \item \textbf{Agent Execution Layer}: The autonomous agents that perform development
+    tasks. Agents operate within scoped contexts defined by their governance contracts.
+
+  \item \textbf{Audit Layer}: The continuous monitoring system that tracks invariant
+    compliance, records the audit trail, and detects developing drift patterns.
+
+  \item \textbf{Milestone Synchronization Layer}: The gate-keeping system that enforces
+    milestone boundaries, coordinates validation, and manages the progression protocol.
+
+  \item \textbf{Human Governance Layer}: The interface layer through which human
+    reviewers receive checkpoint notifications, review system state summaries, and
+    record governance decisions.
+\end{enumerate}
+
+\subsection{Component Interactions}
+
+The layers interact in a well-defined sequence during normal operation:
+
+\begin{enumerate}
+  \item Agents in the execution layer perform work within their contracted scope.
+  \item The audit layer monitors all actions and state transitions in real time.
+  \item When an agent reaches a milestone boundary, the synchronization layer
+    suspends execution and initiates validation.
+  \item Validation results are surfaced to the human governance layer.
+  \item Upon approval, the synchronization layer authorizes the agent to proceed.
+\end{enumerate}
+
+% TODO: Insert architecture diagram here.
+% \begin{figure}[h]
+%   \centering
+%   \includegraphics[width=0.9\textwidth]{system-overview}
+%   \caption{Reflector system architecture overview.}
+%   \label{fig:system-overview}
+% \end{figure}

@@ -1,0 +1,41 @@
+% Section: Governance Model
+\section{Governance Contract Model}
+\label{sec:governance-model}
+
+% TODO: Expand this section.
+%
+% Key topics:
+% - Formal definition of governance contracts
+% - Contract composition and inheritance
+% - Enforcement mechanisms
+% - Contract violation handling
+% - Integration with HITL checkpoints and milestone synchronization
+
+A \textit{governance contract} in the Reflector framework is a formal specification
+of the behavioral constraints and obligations imposed on an autonomous agent or
+agent group operating within a bounded scope. Governance contracts make implicit
+expectations explicit and machine-enforceable.
+
+\subsection{Contract Components}
+
+A governance contract $C$ consists of the following components:
+
+\begin{itemize}
+  \item \textbf{Scope}: The bounded execution context within which the contract applies
+    (e.g., a specific module, feature branch, or milestone phase).
+  \item \textbf{Obligations}: Actions the agent is required to perform (e.g., emit
+    audit events, halt at milestone boundaries, request approval for out-of-scope changes).
+  \item \textbf{Prohibitions}: Actions the agent is forbidden from taking without explicit
+    human approval (e.g., modifying infrastructure configuration, altering governance
+    invariants).
+  \item \textbf{Permissions}: Actions the agent may take autonomously within the contract
+    scope (e.g., generating code, running tests, creating pull requests).
+  \item \textbf{Escalation policy}: The protocol triggered when the agent encounters a
+    situation not covered by the contract.
+\end{itemize}
+
+\subsection{Contract Enforcement}
+
+Contracts are enforced by the Reflector runtime, which intercepts agent actions and
+validates them against the applicable contract before execution. Prohibited actions
+trigger an automatic halt and governance checkpoint escalation.

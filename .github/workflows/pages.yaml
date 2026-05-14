@@ -1,0 +1,98 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - "papers/**"
+      - ".github/workflows/pages.yaml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build-papers:
+    name: Build Papers
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        paper:
+          - papers/reflector
+      fail-fast: false
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build PDF — ${{ matrix.paper }}
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: paper.tex
+          working_directory: ${{ matrix.paper }}
+          extra_system_packages: "biber"
+          args: >-
+            -pdf
+            -bibtex
+            -outdir=build
+            -interaction=nonstopmode
+            -file-line-error
+        continue-on-error: true
+
+      - name: Upload PDF artifact — ${{ matrix.paper }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdf-${{ matrix.paper == 'papers/reflector' && 'reflector' || matrix.paper }}
+          path: ${{ matrix.paper }}/build/paper.pdf
+          if-no-files-found: warn
+          retention-days: 1
+
+  deploy:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: build-papers
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download PDF artifacts
+        uses: actions/download-artifact@v4.1.3
+        with:
+          path: /tmp/pdfs
+          pattern: pdf-*
+        continue-on-error: true
+
+      - name: Assemble Pages site
+        run: |
+          mkdir -p _site
+          cp -r docs/. _site/
+          mkdir -p _site/papers/reflector
+
+          # Copy built PDFs into site if they exist
+          if [[ -f /tmp/pdfs/pdf-reflector/paper.pdf ]]; then
+            cp /tmp/pdfs/pdf-reflector/paper.pdf _site/papers/reflector/reflector.pdf
+            echo "Copied reflector PDF"
+          fi
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

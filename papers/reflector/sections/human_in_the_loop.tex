@@ -1,0 +1,53 @@
+% Section: Human-in-the-Loop Governance
+\section{Human-in-the-Loop Governance}
+\label{sec:human-in-the-loop}
+
+% TODO: Expand this section.
+%
+% Key topics:
+% - Definition and role of human-in-the-loop (HITL) in recursive systems
+% - When HITL checkpoints should be triggered
+% - Checkpoint design principles
+% - Minimizing cognitive load while maintaining meaningful oversight
+% - Escalation protocols
+% - Tooling and interface considerations
+
+Human-in-the-loop (HITL) governance provides the essential alignment bridge between
+autonomous agent behavior and human intent. In the Reflector framework, HITL governance
+is not an ad-hoc override mechanism but a first-class architectural component with
+well-defined trigger conditions, review interfaces, and approval protocols.
+
+\subsection{Governance Checkpoints}
+
+A \textit{governance checkpoint} is a defined point in the development workflow at
+which autonomous progression is suspended pending human review and approval. Unlike
+traditional code review, which is triggered by artifact production (e.g., a pull
+request), Reflector governance checkpoints are triggered by \textit{system state events}:
+
+\begin{itemize}
+  \item Milestone completion
+  \item Drift detection alerts
+  \item Validation invariant violations
+  \item Elapsed time thresholds
+  \item Autonomous recursion depth limits
+\end{itemize}
+
+\subsection{Review Interface Design}
+
+Effective HITL governance requires that human reviewers be presented with a clear,
+concise summary of the system state at each checkpoint. The review interface must:
+
+\begin{itemize}
+  \item Summarize what the agent has done since the last checkpoint
+  \item Highlight any deviations from the expected state
+  \item Provide actionable approval and rejection options
+  \item Surface the relevant validation results from the auditing system
+  \item Minimize the time required for a meaningful review
+\end{itemize}
+
+\subsection{Approval Semantics}
+
+An approval at a governance checkpoint carries a specific semantic meaning: the human
+reviewer attests that the current system state is acceptable as a foundation for the
+next autonomous phase. This approval is recorded in the governance audit trail and
+serves as an immutable reference point for future drift analysis.

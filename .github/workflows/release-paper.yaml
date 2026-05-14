@@ -1,0 +1,75 @@
+name: Release Paper
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+      - "reflector-v*.*.*"
+  workflow_dispatch:
+    inputs:
+      paper:
+        description: "Paper directory (e.g. papers/reflector)"
+        required: true
+        default: "papers/reflector"
+      tag:
+        description: "Release tag (e.g. reflector-v0.1.0)"
+        required: true
+
+jobs:
+  build-and-release:
+    name: Build and Release ${{ github.event.inputs.paper || 'papers/reflector' }}
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Determine paper from tag
+        id: paper
+        run: |
+          TAG="${{ github.ref_name }}"
+          INPUT_PAPER="${{ github.event.inputs.paper }}"
+
+          if [[ -n "${INPUT_PAPER}" ]]; then
+            echo "dir=${INPUT_PAPER}" >> "$GITHUB_OUTPUT"
+          elif [[ "${TAG}" == reflector-* ]]; then
+            echo "dir=papers/reflector" >> "$GITHUB_OUTPUT"
+          else
+            echo "dir=papers/reflector" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: paper.tex
+          working_directory: ${{ steps.paper.outputs.dir }}
+          extra_system_packages: "biber"
+          args: >-
+            -pdf
+            -bibtex
+            -outdir=build
+            -interaction=nonstopmode
+            -file-line-error
+
+      - name: Determine release name
+        id: release
+        run: |
+          PAPER_DIR="${{ steps.paper.outputs.dir }}"
+          PAPER_NAME=$(basename "${PAPER_DIR}")
+          TAG="${{ github.ref_name || github.event.inputs.tag }}"
+          echo "name=${PAPER_NAME^} ${TAG}" >> "$GITHUB_OUTPUT"
+          echo "pdf=${PAPER_DIR}/build/paper.pdf" >> "$GITHUB_OUTPUT"
+          echo "asset=${PAPER_NAME}-${TAG}.pdf" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ steps.release.outputs.name }}
+          tag_name: ${{ github.ref_name || github.event.inputs.tag }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          files: ${{ steps.release.outputs.pdf }}

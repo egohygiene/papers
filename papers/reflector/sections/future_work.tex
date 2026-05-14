@@ -1,0 +1,38 @@
+% Section: Future Work
+\section{Future Work}
+\label{sec:future-work}
+
+% TODO: Expand this section.
+%
+% Potential directions:
+% - Formal verification of governance contracts
+% - Machine-readable contract specification languages
+% - Empirical evaluation of Reflector in production systems
+% - Multi-agent coordination under shared governance contracts
+% - Adaptive milestone criteria based on historical drift data
+% - Integration with CI/CD and DevSecOps pipelines
+% - Tooling and IDE integration for contract authoring
+
+Several promising directions for future work emerge from the Reflector framework:
+
+\paragraph{Formal Contract Verification.}
+Future work should investigate the application of formal methods—such as temporal logic
+and model checking—to provide machine-verified guarantees about governance contract
+compliance. This would strengthen the enforcement properties of Reflector beyond the
+runtime monitoring approach described in this paper.
+
+\paragraph{Empirical Evaluation.}
+The theoretical framework presented here requires empirical validation through controlled
+studies and case analyses of Reflector deployments in production AI-augmented development
+environments. Metrics of interest include drift detection latency, false positive rates
+in invariant monitoring, and the effect of milestone granularity on development velocity.
+
+\paragraph{Adaptive Milestone Criteria.}
+Static milestone criteria may be suboptimal across diverse project types and team
+contexts. Future work should explore adaptive milestone specification that adjusts
+validation criteria based on historical drift patterns and project-specific risk profiles.
+
+\paragraph{Multi-Agent Governance.}
+The current framework addresses single-agent and hierarchical agent topologies.
+Future work should extend Reflector's governance model to peer-to-peer multi-agent
+systems where no single agent has supervisory authority.
