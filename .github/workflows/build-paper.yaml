@@ -20,6 +20,9 @@ on:
         required: false
         default: "papers/reflector"
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Build ${{ matrix.paper }}
