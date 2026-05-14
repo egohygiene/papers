@@ -1,0 +1,49 @@
+% Section: Recursive Auditing Systems
+\section{Recursive Auditing Systems}
+\label{sec:recursive-auditing}
+
+% TODO: Expand this section.
+%
+% Key topics:
+% - Definition of recursive auditing
+% - Invariant specification and monitoring
+% - Audit trail construction
+% - Continuous vs. checkpoint-triggered auditing
+% - Integration with milestone synchronization
+% - Tooling and implementation approaches
+
+Recursive auditing is the continuous process of validating system state against a
+predefined set of invariants across all levels of the recursive development stack.
+Unlike static analysis or point-in-time code review, recursive auditing operates
+as an ongoing monitoring layer that accompanies each phase of autonomous execution.
+
+\subsection{Invariant Specification}
+
+An \textit{invariant} in the Reflector framework is a formally specified property
+that must hold throughout the development process. Invariants are classified into
+three categories:
+
+\begin{itemize}
+  \item \textbf{Structural invariants}: Properties of the codebase structure, such as
+    module boundaries, interface contracts, and dependency constraints.
+  \item \textbf{Behavioral invariants}: Properties of system behavior, such as test
+    coverage thresholds, performance bounds, and security properties.
+  \item \textbf{Governance invariants}: Properties of the development process itself,
+    such as milestone completion order, approval record completeness, and agent scope
+    compliance.
+\end{itemize}
+
+\subsection{Audit Trail}
+
+The recursive audit trail is an append-only log of all significant system state
+transitions, validation results, governance decisions, and agent actions. The audit
+trail serves as the authoritative record for post-hoc analysis of drift incidents
+and supports the reconstruction of the causal chain leading to any failure mode.
+
+\subsection{Continuous Monitoring}
+
+Reflector's auditing system monitors invariants continuously during autonomous
+execution, not only at milestone boundaries. This enables early detection of
+developing drift patterns before they cross the threshold of milestone validation
+failure—providing an early warning system that can trigger precautionary governance
+checkpoints before full drift occurs.

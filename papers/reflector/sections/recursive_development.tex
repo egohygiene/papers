@@ -1,0 +1,49 @@
+% Section: Recursive Development Systems
+\section{Recursive Development Systems}
+\label{sec:recursive-development}
+
+% TODO: Expand this section.
+%
+% Key topics:
+% - Definition of recursive development in the context of AI-augmented engineering
+% - Distinction between iterative and recursive development patterns
+% - How autonomous agents create self-referential feedback loops
+% - Benefits and risks of recursive automation
+% - The role of scaffolding, code generation, and agentic pipelines
+% - Examples of recursive development patterns in modern AI tooling
+
+Recursive development systems are software engineering workflows in which AI agents
+participate in their own construction, validation, and refinement cycles. Unlike
+traditional iterative development, where human developers drive each cycle, recursive
+systems allow autonomous agents to invoke sub-agents, evaluate their own outputs, and
+initiate subsequent development passes without direct human intervention at each step.
+
+This recursive structure offers significant productivity advantages: agents can parallelize
+work, maintain context across long-horizon tasks, and apply consistent coding standards
+without fatigue. However, recursive autonomy introduces compounding risk surfaces.
+Each recursive invocation may inherit and amplify errors, assumptions, or misalignments
+from prior passes—a phenomenon we term \textit{recursive drift}.
+
+\subsection{Characteristics of Recursive Development}
+
+\begin{itemize}
+  \item \textbf{Self-referential invocation}: Agents invoke further agents as part of
+    their execution strategy.
+  \item \textbf{Compounding context}: Each recursive pass builds on the artifacts of
+    prior passes, creating layered dependency chains.
+  \item \textbf{Autonomous pacing}: Without external gates, recursive systems can
+    progress indefinitely without human review.
+  \item \textbf{Emergent complexity}: System behavior becomes increasingly difficult
+    to predict as recursion depth grows.
+\end{itemize}
+
+\subsection{The Recursion Boundary Problem}
+
+A central challenge in recursive development is determining when and how to interrupt
+autonomous execution for human review. Systems that interrupt too frequently lose the
+efficiency benefits of automation; systems that interrupt too rarely risk undetected
+drift and misalignment.
+
+Reflector addresses this challenge through \textit{milestone synchronization}, described
+in Section~\ref{sec:milestone-synchronization}, which defines explicit recursion
+boundaries tied to semantic milestones rather than arbitrary time or iteration counts.

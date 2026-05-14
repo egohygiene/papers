@@ -1,0 +1,63 @@
+% Section: Introduction
+\section{Introduction}
+\label{sec:introduction}
+
+% TODO: Expand this section.
+%
+% Key topics:
+% - Motivation for reflective development systems
+% - The challenge of AI-augmented recursive engineering
+% - Overview of the Reflector framework
+% - Contributions of this paper
+% - Paper organization
+
+The emergence of large language model (LLM)-powered development agents has fundamentally
+altered the relationship between human engineers and software systems. Where traditional
+development workflows position humans as the primary actors—writing, reviewing, and
+deploying code—modern AI-augmented pipelines increasingly delegate these activities to
+autonomous agents capable of operating across extended time horizons with minimal
+per-step human oversight.
+
+This shift introduces substantial productivity benefits: agents can generate, test, and
+refine code faster than human developers, maintain consistency across large codebases,
+and parallelize work across multiple concurrent tasks. However, it also introduces a
+new class of systemic risks that existing software engineering methodologies are
+ill-equipped to address.
+
+Chief among these risks is \textit{recursive drift}: the progressive divergence of an
+autonomous system from its intended objectives as it operates through self-referential
+feedback cycles. Without explicit governance mechanisms, recursive AI development
+systems are prone to compounding misalignment, emergent complexity, and silent failure
+modes that are difficult to detect and costly to remediate.
+
+This paper introduces \textit{Reflector}, a framework for designing, implementing, and
+governing \textit{reflective development systems}—AI-augmented engineering workflows
+that incorporate structured self-evaluation, bounded autonomy, and human alignment
+checkpoints as first-class architectural concerns.
+
+\subsection{Contributions}
+
+This paper makes the following contributions:
+
+\begin{enumerate}
+  \item A formal characterization of recursive development systems and their associated
+    failure modes.
+  \item A taxonomy of drift types in AI-augmented engineering workflows.
+  \item The Reflector framework: four core mechanisms for governance of recursive
+    development systems.
+  \item An architectural reference model for implementing Reflector-compliant systems.
+  \item Design guidelines for integrating Reflector into existing development pipelines.
+\end{enumerate}
+
+\subsection{Paper Organization}
+
+The remainder of this paper is organized as follows.
+Section~\ref{sec:recursive-development} characterizes recursive development systems.
+Section~\ref{sec:human-in-the-loop} describes the human-in-the-loop governance model.
+Section~\ref{sec:recursive-auditing} presents the recursive auditing system.
+Section~\ref{sec:milestone-synchronization} defines milestone synchronization protocols.
+Section~\ref{sec:governance-model} describes the governance contract model.
+Section~\ref{sec:proposed-architecture} presents the Reflector architecture.
+Section~\ref{sec:drift-failure-modes} characterizes drift and failure modes.
+Section~\ref{sec:future-work} outlines directions for future work.
+Section~\ref{sec:conclusion} concludes.

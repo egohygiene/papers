@@ -1,0 +1,66 @@
+name: Build Paper
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "papers/**"
+      - "scripts/build-paper.sh"
+      - ".github/workflows/build-paper.yaml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "papers/**"
+      - "scripts/build-paper.sh"
+      - ".github/workflows/build-paper.yaml"
+  workflow_dispatch:
+    inputs:
+      paper:
+        description: "Paper directory (e.g. papers/reflector)"
+        required: false
+        default: "papers/reflector"
+
+jobs:
+  build:
+    name: Build ${{ matrix.paper }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        paper:
+          - papers/reflector
+      fail-fast: false
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install LaTeX (TeX Live)
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: paper.tex
+          working_directory: ${{ matrix.paper }}
+          latexmk_use_lualatex: false
+          latexmk_shell_escape: false
+          extra_system_packages: "biber"
+          args: >-
+            -pdf
+            -bibtex
+            -outdir=build
+            -interaction=nonstopmode
+            -file-line-error
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ matrix.paper }}-pdf
+          path: ${{ matrix.paper }}/build/paper.pdf
+          retention-days: 30
+
+      - name: Upload build logs on failure
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: ${{ matrix.paper }}-logs
+          path: ${{ matrix.paper }}/build/
+          retention-days: 7

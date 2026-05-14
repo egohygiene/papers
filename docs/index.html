@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Research papers on systems thinking, AI governance, reflective development architectures, and technical writing by Alan Szmyt." />
+  <title>papers — egohygiene</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --border: #30363d;
+      --text: #c9d1d9;
+      --text-muted: #8b949e;
+      --accent: #58a6ff;
+      --accent-hover: #79c0ff;
+      --badge-draft: #f0883e;
+      --badge-published: #3fb950;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    header h1 a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    header p {
+      margin-top: 0.25rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 2rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .paper-grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .paper-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      transition: border-color 0.15s;
+    }
+
+    .paper-card:hover {
+      border-color: var(--accent);
+    }
+
+    .paper-card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .paper-card-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .paper-card-title:hover {
+      color: var(--accent-hover);
+      text-decoration: underline;
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      border-radius: 2rem;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .badge-draft {
+      background: rgba(240, 136, 62, 0.15);
+      color: var(--badge-draft);
+      border: 1px solid rgba(240, 136, 62, 0.4);
+    }
+
+    .badge-published {
+      background: rgba(63, 185, 80, 0.15);
+      color: var(--badge-published);
+      border: 1px solid rgba(63, 185, 80, 0.4);
+    }
+
+    .paper-card-description {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .paper-card-links {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .paper-card-links a {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .paper-card-links a:hover {
+      color: var(--accent);
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><a href="/">egohygiene / papers</a></h1>
+    <p>Research papers on systems thinking, AI governance, and reflective development architectures.</p>
+  </header>
+
+  <main>
+    <h2>Papers</h2>
+    <div class="paper-grid">
+
+      <div class="paper-card">
+        <div class="paper-card-header">
+          <a class="paper-card-title" href="papers/reflector/">
+            Reflector: Reflective Development Systems for Recursive AI-Augmented Software Engineering
+          </a>
+          <span class="badge badge-draft">Draft</span>
+        </div>
+        <p class="paper-card-description">
+          Introduces the Reflector framework for governing recursive AI-augmented development
+          systems through scoped agents, human-in-the-loop checkpoints, recursive auditing,
+          and milestone synchronization protocols.
+        </p>
+        <div class="paper-card-links">
+          <a href="papers/reflector/reflector.pdf">
+            📄 PDF
+          </a>
+          <a href="https://github.com/egohygiene/papers/tree/main/papers/reflector">
+            💻 Source
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <p>
+      By <a href="https://github.com/egohygiene">Alan Szmyt</a> ·
+      <a href="https://github.com/egohygiene/papers">GitHub Repository</a>
+    </p>
+  </footer>
+</body>
+</html>
