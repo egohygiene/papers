@@ -91,8 +91,8 @@ jobs:
           find _site
           echo "Paper build content:"
           find papers -maxdepth 3
-          echo "Temp directory content:"
-          find /tmp -maxdepth 2 2>/dev/null || true
+          echo "Runner temp content:"
+          find "${RUNNER_TEMP}" -maxdepth 2 2>/dev/null || true
 
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
