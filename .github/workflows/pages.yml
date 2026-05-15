@@ -48,37 +48,51 @@ jobs:
 
       - name: Assemble Pages site
         run: |
-          mkdir --parents _site/papers/reflector
+          mkdir --parents _site/reflector
 
           if [[ -d docs ]]; then
             cp --recursive docs/. _site/
           fi
 
-          if [[ -f papers/reflector/build/paper.pdf ]]; then
-            cp \
-              papers/reflector/build/paper.pdf \
-              _site/papers/reflector/reflector.pdf
+          if [[ ! -f papers/reflector/build/paper.pdf ]]; then
+            echo "Expected PDF not found at papers/reflector/build/paper.pdf" >&2
+            exit 1
           fi
 
-          cat > _site/index.html <<EOF
+          cp \
+            papers/reflector/build/paper.pdf \
+            _site/reflector/reflector.pdf
+
+          cat > _site/reflector/index.html <<EOF
           <!DOCTYPE html>
-          <html>
+          <html lang="en">
           <head>
             <meta charset="utf-8">
-            <title>papers</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>reflector</title>
           </head>
           <body>
-            <h1>papers</h1>
+            <h1>reflector</h1>
             <ul>
               <li>
-                <a href="papers/reflector/reflector.pdf">
-                  reflector
+                <a href="./reflector.pdf">
+                  Download PDF
                 </a>
+              </li>
+              <li>
+                <a href="../">Back to papers index</a>
               </li>
             </ul>
           </body>
           </html>
           EOF
+
+          echo "Assembled Pages content:"
+          find _site
+          echo "Paper build content:"
+          find papers -maxdepth 3
+          echo "Temp directory content:"
+          find /tmp -maxdepth 2 2>/dev/null || true
 
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
