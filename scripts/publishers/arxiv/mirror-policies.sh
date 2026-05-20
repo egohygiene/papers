@@ -1,16 +1,20 @@
 #!/usr/bin/env bash
 
 # ============================================================================
-# arxiv-policy-mirror.sh
+# mirror-policies.sh
 #
-# Mirrors the arXiv policy documentation into the repository and generates
-# a reproducibility manifest for deterministic publishing workflows.
-#
-# Usage:
-#   ./scripts/arxiv-policy-mirror.sh
+# Mirrors the arXiv policy documentation into the repository for:
+# - offline browsing
+# - deterministic publishing workflows
+# - publisher compliance analysis
+# - schema extraction
+# - validation automation
 #
 # Repository:
 #   https://github.com/egohygiene/papers
+#
+# Usage:
+#   ./scripts/publishers/arxiv/mirror-policies.sh
 # ============================================================================
 
 set -o errexit
@@ -21,23 +25,35 @@ set -o pipefail
 # Configuration
 # ============================================================================
 
-readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly SCRIPT_DIRECTORY="$(
+    cd "$(dirname "${BASH_SOURCE[0]}")" && pwd
+)"
 
-readonly REPOSITORY_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+readonly REPOSITORY_ROOT="$(
+    cd "${SCRIPT_DIRECTORY}/../../.." && pwd
+)"
 
-readonly MIRROR_SOURCE_URL="https://info.arxiv.org/help/policies/index.html"
+readonly PUBLISHER_NAME="arxiv"
 
-readonly MIRROR_OUTPUT_DIRECTORY="${REPOSITORY_ROOT}/docs/arxiv/mirror/policies"
+readonly MIRROR_SOURCE_URL="https://info.arxiv.org/help/policies/"
 
-readonly MANIFEST_OUTPUT_PATH="${REPOSITORY_ROOT}/docs/arxiv/manifest.json"
+readonly MIRROR_OUTPUT_DIRECTORY="${REPOSITORY_ROOT}/resources/publishers/arxiv/mirror/policies"
+
+readonly MANIFEST_OUTPUT_PATH="${REPOSITORY_ROOT}/resources/publishers/arxiv/manifests/policies.json"
 
 readonly USER_AGENT="Mozilla/5.0"
 
-readonly HTTRACK_DEPTH="10"
+readonly HTTRACK_DEPTH="5"
 
-readonly HTTRACK_SCOPE_INCLUDE="+info.arxiv.org/help/policies/*"
+readonly HTTRACK_INCLUDE_SCOPE="+info.arxiv.org/help/policies/*"
 
-readonly HTTRACK_SCOPE_EXCLUDE="-*"
+readonly HTTRACK_EXCLUDE_ALL="-*"
+
+readonly HTTRACK_EXCLUDE_PDFS="-*.pdf"
+
+readonly HTTRACK_EXCLUDE_SEARCH="-*/search/*"
+
+readonly HTTRACK_EXCLUDE_CGI="-*/cgi-bin/*"
 
 # ============================================================================
 # Logging
@@ -102,7 +118,21 @@ initialize_directories() {
 }
 
 # ============================================================================
-# arXiv Policy Mirror
+# Cleanup
+# ============================================================================
+
+cleanup_previous_mirror() {
+    if [[ -d "${MIRROR_OUTPUT_DIRECTORY}" ]]; then
+        log_info "Removing previous mirror contents"
+
+        rm -rf "${MIRROR_OUTPUT_DIRECTORY}"
+    fi
+
+    mkdir -p "${MIRROR_OUTPUT_DIRECTORY}"
+}
+
+# ============================================================================
+# Mirror
 # ============================================================================
 
 mirror_arxiv_policies() {
@@ -117,11 +147,13 @@ mirror_arxiv_policies() {
     httrack \
         "${MIRROR_SOURCE_URL}" \
         --path "${MIRROR_OUTPUT_DIRECTORY}" \
-        "${HTTRACK_SCOPE_INCLUDE}" \
-        "${HTTRACK_SCOPE_EXCLUDE}" \
+        --mirror \
         --depth="${HTTRACK_DEPTH}" \
+        --near \
+        --stay-on-same-domain \
         --robots=0 \
         --quiet \
+        --clean \
         "--user-agent=${USER_AGENT}"
 
     log_info "Completed arXiv policy mirror"
@@ -135,19 +167,21 @@ generate_manifest() {
     local mirrored_at_utc_timestamp
 
     mirrored_at_utc_timestamp="$(
-        date --utc +"%Y-%m-%dT%H:%M:%SZ"
+        date -u +"%Y-%m-%dT%H:%M:%SZ"
     )"
 
     cat > "${MANIFEST_OUTPUT_PATH}" <<EOF
 {
-    "publisher": "arxiv",
+    "publisher": "${PUBLISHER_NAME}",
     "source": "${MIRROR_SOURCE_URL}",
     "mirrored_at": "${mirrored_at_utc_timestamp}",
     "tool": "httrack",
     "depth": ${HTTRACK_DEPTH},
     "user_agent": "${USER_AGENT}",
     "scope": "info.arxiv.org/help/policies/*",
-    "output_directory": "docs/arxiv/mirror/policies"
+    "output_directory": "resources/publishers/arxiv/mirror/policies",
+    "offline_enabled": true,
+    "link_rewriting": true
 }
 EOF
 
@@ -163,6 +197,8 @@ main() {
     verify_dependencies
 
     initialize_directories
+
+    cleanup_previous_mirror
 
     mirror_arxiv_policies
 
