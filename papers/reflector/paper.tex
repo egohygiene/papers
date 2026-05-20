@@ -30,7 +30,7 @@ headheight=14pt
 ]{geometry}
 
 \usepackage{setspace}
-\onehalfspacing
+\onehalfspacing{}
 
 \usepackage{parskip}
 
@@ -73,6 +73,7 @@ reflective systems
 pdfcreator={LaTeX},
 pdfproducer={reflector publication pipeline}
 ]{hyperref}
+\usepackage{bookmark}
 
 % ============================================================
 % Bibliography
@@ -248,7 +249,11 @@ https://github.com/egohygiene/papers
 }
 
 \newcommand{\paperorcid}{
-% TODO: Add ORCID
+0009-0008-5291-9795
+}
+
+\newcommand{\paperorcidurl}{
+https://orcid.org/\paperorcid{}
 }
 
 % ============================================================
@@ -257,14 +262,15 @@ https://github.com/egohygiene/papers
 
 \title{
 \vspace{-1.5cm}
-\textbf{\Huge Reflector}\[0.35cm]
-\Large Reflective Development Systems for\
+\textbf{\Huge reflector}\\[0.35cm]
+\Large Reflective Development Systems for\\
 Recursive AI-Augmented Software Engineering
 }
 
 \author{
-Alan Szmyt\
-\small \href{\paperrepository}{github.com/egohygiene/papers}
+Alan Szmyt\\
+\small \href{\paperrepository}{github.com/egohygiene/papers}\\
+\small \href{\paperorcidurl}{ORCID: \paperorcid}
 }
 
 \date{\paperdate}
@@ -285,9 +291,9 @@ Alan Szmyt\
 
 \vspace{0.5cm}
 
-\begin{abstract}
-\input{sections/abstract}
-\end{abstract}
+% \begin{abstract}
+% \input{sections/abstract}
+% \end{abstract}
 
 \vspace{0.5cm}
 
@@ -313,25 +319,16 @@ Repository: \href{\paperrepository}{\paperrepository}
 % Main Sections
 % ============================================================
 
-\input{sections/introduction}
-
-\input{sections/recursive_development}
-
-\input{sections/human_in_the_loop}
-
-\input{sections/recursive_auditing}
-
-\input{sections/milestone_synchronization}
-
-\input{sections/governance_model}
-
-\input{sections/proposed_architecture}
-
-\input{sections/drift_failure_modes}
-
-\input{sections/future_work}
-
-\input{sections/conclusion}
+% \input{sections/introduction}
+% \input{sections/recursive_development}
+% \input{sections/human_in_the_loop}
+% \input{sections/recursive_auditing}
+% \input{sections/milestone_synchronization}
+% \input{sections/governance_model}
+% \input{sections/proposed_architecture}
+% \input{sections/drift_failure_modes}
+% \input{sections/future_work}
+% \input{sections/conclusion}
 
 % ============================================================
 % Future Visual Sections
@@ -346,6 +343,8 @@ Repository: \href{\paperrepository}{\paperrepository}
 % ============================================================
 
 \newpage
+
+\nocite{*}
 
 \printbibliography
 
