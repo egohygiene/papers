@@ -46,7 +46,7 @@ jobs:
           echo "paper_name=${PAPER_NAME}" >> "$GITHUB_OUTPUT"
           echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
           echo "release_name=${PAPER_NAME} ${TAG}" >> "$GITHUB_OUTPUT"
-          echo "pdf_path=${PAPER_DIR}/build/paper.pdf" >> "$GITHUB_OUTPUT"
+          echo "pdf_path=${PAPER_DIR}/.cache/out/paper.pdf" >> "$GITHUB_OUTPUT"
           echo "asset_name=${PAPER_NAME}-${TAG}.pdf" >> "$GITHUB_OUTPUT"
 
       - name: Build LaTeX PDF
@@ -57,10 +57,15 @@ jobs:
           extra_system_packages: "biber"
           args: >-
             -pdf
-            -bibtex
-            -outdir=build
             -interaction=nonstopmode
+            -synctex=1
             -file-line-error
+            -shell-escape
+            -f
+            -gg
+            -cd
+            -r
+            .latexmkrc
 
       - name: Rename release artifact
         run: |

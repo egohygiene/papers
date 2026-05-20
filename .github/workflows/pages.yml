@@ -41,10 +41,15 @@ jobs:
           extra_system_packages: "biber"
           args: >-
             -pdf
-            -bibtex
-            -outdir=build
             -interaction=nonstopmode
+            -synctex=1
             -file-line-error
+            -shell-escape
+            -f
+            -gg
+            -cd
+            -r
+            .latexmkrc
 
       - name: Assemble Pages site
         run: |
@@ -54,13 +59,13 @@ jobs:
             cp --recursive docs/. _site/
           fi
 
-          if [[ ! -f papers/reflector/build/paper.pdf ]]; then
-            echo "Expected PDF not found at papers/reflector/build/paper.pdf" >&2
+          if [[ ! -f papers/reflector/.cache/out/paper.pdf ]]; then
+            echo "Expected PDF not found at papers/reflector/.cache/out/paper.pdf" >&2
             exit 1
           fi
 
           cp \
-            papers/reflector/build/paper.pdf \
+            papers/reflector/.cache/out/paper.pdf \
             _site/reflector/reflector.pdf
 
           cat > _site/reflector/index.html <<EOF
