@@ -1,89 +1,158 @@
 #!/usr/bin/env bash
-# build-paper.sh — Build a LaTeX paper to PDF.
-#
-# Usage:
-#   ./scripts/build-paper.sh <paper-path|paper-slug>
-#   ./scripts/build-paper.sh --all
-#
-# Examples:
-#   ./scripts/build-paper.sh papers/reflector
-#   ./scripts/build-paper.sh reflector
-#   ./scripts/build-paper.sh --all
-#
-# Requirements:
-#   - latexmk
-#   - pdflatex or xelatex
-#   - biber (for biblatex)
+# build-paper.sh — Build LaTeX paper(s) to PDF.
 
 set -euo pipefail
 
-TARGET="${1:-}"
+REPOSITORY_ROOT="$(git rev-parse --show-toplevel)"
+PAPERS_DIRECTORY="${REPOSITORY_ROOT}/papers"
 
-if [[ -z "${TARGET}" ]]; then
-  echo "Usage: $0 <paper-path|paper-slug|--all>" >&2
-  echo "Examples: $0 papers/reflector | $0 reflector | $0 --all" >&2
-  exit 1
-fi
+DEFAULT_PAPER="reflector"
+BUILD_ALL=false
+OPEN_PDF=false
+TARGET="${DEFAULT_PAPER}"
 
-build_one() {
-  local paper_dir="$1"
-  local paper_tex="${paper_dir}/paper.tex"
-
-  if [[ ! -d "${paper_dir}" ]]; then
-    echo "Error: Directory '${paper_dir}' not found." >&2
-    exit 1
-  fi
-
-  if [[ ! -f "${paper_tex}" ]]; then
-    echo "Error: '${paper_tex}' not found." >&2
-    exit 1
-  fi
-
-  echo "Building: ${paper_tex}"
-  echo "Output:   ${paper_dir}/.cache/out/"
-
-  (
-    cd "${paper_dir}"
-
-    mkdir -p ".cache/aux" ".cache/out"
-
-    latexmk \
-      -pdf \
-      -interaction=nonstopmode \
-      -synctex=1 \
-      -file-line-error \
-      -shell-escape \
-      -f \
-      -gg \
-      -cd \
-      -r ".latexmkrc" \
-      "paper.tex"
-  )
-
-  echo ""
-  echo "Build complete: ${paper_dir}/.cache/out/paper.pdf"
+usage() {
+cat <<USAGE
+Usage:
+  ./scripts/build-paper.sh <paper-name|paper-path>
+  ./scripts/build-paper.sh --all
+  ./scripts/build-paper.sh <paper-name|paper-path> --open
+USAGE
 }
 
-if [[ "${TARGET}" == "--all" ]]; then
-  mapfile -t PAPER_DIRS < <(
-    find "papers" -mindepth 1 -maxdepth 1 -type d -exec test -f "{}/paper.tex" \; -print | sort
-  )
+open_pdf() {
+    local pdf_file="$1"
 
-  if [[ "${#PAPER_DIRS[@]}" -eq 0 ]]; then
-    echo "Error: No paper directories found under papers/." >&2
-    exit 1
-  fi
+    if [[ ! -f "${pdf_file}" ]]; then
+        return
+    fi
 
-  for paper_dir in "${PAPER_DIRS[@]}"; do
-    build_one "${paper_dir}"
-  done
+    case "${OSTYPE}" in
+        darwin*)
+            open "${pdf_file}"
+            ;;
+        linux*)
+            if command -v xdg-open >/dev/null 2>&1; then
+                xdg-open "${pdf_file}"
+            fi
+            ;;
+        msys*|cygwin*|win32*)
+            start "${pdf_file}"
+            ;;
+    esac
+}
+
+resolve_paper_directory() {
+    local input="$1"
+
+    if [[ -d "${input}" ]]; then
+        printf '%s\n' "${input}"
+        return
+    fi
+
+    if [[ -d "${PAPERS_DIRECTORY}/${input}" ]]; then
+        printf '%s\n' "${PAPERS_DIRECTORY}/${input}"
+        return
+    fi
+
+    if [[ -d "${REPOSITORY_ROOT}/${input}" ]]; then
+        printf '%s\n' "${REPOSITORY_ROOT}/${input}"
+        return
+    fi
+
+    printf '%s\n' "${PAPERS_DIRECTORY}/${input}"
+}
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --all)
+            BUILD_ALL=true
+            shift
+            ;;
+        --open)
+            OPEN_PDF=true
+            shift
+            ;;
+        --help)
+            usage
+            exit 0
+            ;;
+        *)
+            TARGET="$1"
+            shift
+            ;;
+    esac
+done
+
+build_paper() {
+    local target="$1"
+    local paper_directory
+
+    paper_directory="$(resolve_paper_directory "${target}")"
+
+    local paper_file="${paper_directory}/paper.tex"
+    local latexmkrc_file="${paper_directory}/.latexmkrc"
+    local output_directory="${paper_directory}/.cache/out"
+    local output_pdf="${output_directory}/paper.pdf"
+
+    if [[ ! -d "${paper_directory}" ]]; then
+        echo "Error: Directory '${paper_directory}' not found." >&2
+        exit 1
+    fi
+
+    if [[ ! -f "${paper_file}" ]]; then
+        echo "Error: Missing paper.tex at '${paper_file}'." >&2
+        exit 1
+    fi
+
+    if [[ ! -f "${latexmkrc_file}" ]]; then
+        echo "Error: Missing .latexmkrc at '${latexmkrc_file}'." >&2
+        exit 1
+    fi
+
+    echo "Building: ${paper_file}"
+    echo "Output:   ${output_directory}/"
+
+    (
+        cd "${paper_directory}"
+
+        mkdir -p ".cache/aux" ".cache/out"
+
+        latexmk \
+            -pdf \
+            -interaction=nonstopmode \
+            -synctex=1 \
+            -file-line-error \
+            -shell-escape \
+            -f \
+            -gg \
+            -cd \
+            -r ".latexmkrc" \
+            "paper.tex"
+    )
+
+    if [[ ! -f "${output_pdf}" ]]; then
+        echo "Error: Expected PDF not found at '${output_pdf}'." >&2
+        exit 1
+    fi
+
+    echo "Build complete: ${output_pdf}"
+
+    if [[ "${OPEN_PDF}" == "true" ]]; then
+        open_pdf "${output_pdf}"
+    fi
+}
+
+if [[ "${BUILD_ALL}" == "true" ]]; then
+    mapfile -t PAPER_DIRECTORIES < <(
+        find "${PAPERS_DIRECTORY}" -mindepth 1 -maxdepth 1 -type d | sort
+    )
+
+    for directory in "${PAPER_DIRECTORIES[@]}"; do
+        if [[ -f "${directory}/paper.tex" ]]; then
+            build_paper "${directory}"
+        fi
+    done
 else
-  PAPER_DIR="${TARGET}"
-
-  if [[ ! -d "${PAPER_DIR}" && -d "papers/${TARGET}" ]]; then
-    PAPER_DIR="papers/${TARGET}"
-  fi
-
-  build_one "${PAPER_DIR}"
+    build_paper "${TARGET}"
 fi
-
