@@ -59,17 +59,22 @@ jobs:
           extra_system_packages: "biber"
           args: >-
             -pdf
-            -bibtex
-            -outdir=build
             -interaction=nonstopmode
+            -synctex=1
             -file-line-error
+            -shell-escape
+            -f
+            -gg
+            -cd
+            -r
+            .latexmkrc
 
       - name: Upload PDF artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.vars.outputs.pdf_artifact }}
-          path: ${{ matrix.paper }}/build/paper.pdf
+          path: ${{ matrix.paper }}/.cache/out/paper.pdf
           if-no-files-found: error
           retention-days: 30
 
@@ -78,6 +83,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.vars.outputs.build_artifact }}
-          path: ${{ matrix.paper }}/build/
+          path: ${{ matrix.paper }}/.cache/
           if-no-files-found: warn
           retention-days: 7
