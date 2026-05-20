@@ -26,7 +26,10 @@ PAPER-SLUG/
 ├── diagrams/               # Source diagrams (Excalidraw)
 ├── assets/                 # Static assets
 ├── references/             # Reference documents
-└── examples/               # Example artifacts
+├── examples/               # Example artifacts
+└── .cache/
+    ├── aux/                # LaTeX auxiliary files
+    └── out/                # Build output (paper.pdf)
 ```
 
 ## Building

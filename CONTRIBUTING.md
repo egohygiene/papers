@@ -36,6 +36,9 @@ papers/
 # Build a specific paper
 ./scripts/build-paper.sh papers/reflector
 
+# Build all papers
+./scripts/build-paper.sh --all
+
 # Watch and auto-rebuild during development
 ./scripts/watch-paper.sh papers/reflector
 ```

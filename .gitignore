@@ -245,5 +245,5 @@ Thumbs.db
 *.swp
 *.swo
 *~
-
+.idea/
 .history
