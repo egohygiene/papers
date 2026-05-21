@@ -1,39 +1,88 @@
-\documentclass[12pt, letterpaper]{article}
+\documentclass[11pt,letterpaper]{article}
 
-% --- Encoding and fonts ---
+% ============================================================
+% Encoding and Typography
+% ============================================================
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[english]{babel}
 
-% --- Page geometry ---
+% ============================================================
+% Page Layout
+% ============================================================
 \usepackage[margin=1in]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{parskip}
 
-% --- Hyperlinks ---
+% ============================================================
+% Metadata Commands
+% ============================================================
+% TODO: Replace all metadata values below.
+\newcommand{\papertitle}{PAPER TITLE}
+\newcommand{\paperauthor}{AUTHOR NAME}
+\newcommand{\paperdate}{\today}
+\newcommand{\paperstatus}{Draft}
+\newcommand{\paperrepository}{https://github.com/OWNER/REPO}
+\newcommand{\paperorcid}{0000-0000-0000-0000}
+\newcommand{\paperorcidurl}{https://orcid.org/\paperorcid}
+
+% ============================================================
+% Hyperlinks and PDF Metadata
+% ============================================================
 \usepackage[
+  unicode=true,
   colorlinks=true,
   linkcolor=blue,
   citecolor=blue,
   urlcolor=blue,
-  pdftitle={PAPER TITLE},
-  pdfauthor={AUTHOR NAME},
+  pdftitle={\papertitle},
+  pdfauthor={\paperauthor}
 ]{hyperref}
+\usepackage{bookmark}
 
-% --- Bibliography ---
-\usepackage[backend=biber, style=ieee, sorting=nyt]{biblatex}
+% ============================================================
+% Bibliography
+% ============================================================
+\usepackage[
+  backend=biber,
+  style=ieee,
+  sorting=nyt,
+  giveninits=true,
+  maxbibnames=99,
+  doi=true,
+  url=true,
+  isbn=false,
+  eprint=true
+]{biblatex}
 \addbibresource{references.bib}
 
-% --- Graphics and figures ---
+% ============================================================
+% Graphics and Figures
+% ============================================================
 \usepackage{graphicx}
-\graphicspath{{figures/}}
+\graphicspath{{figures/}{assets/}{diagrams/}}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg,.jpeg}
+\usepackage{caption}
+\usepackage{subcaption}
+\captionsetup{font=small,labelfont=bf,labelsep=period}
+% Accessibility note: use descriptive captions and keep an alt-text source note near each figure.
 
-% --- Tables ---
+% ============================================================
+% Tables
+% ============================================================
 \usepackage{booktabs}
 \usepackage{array}
+\usepackage{longtable}
+\usepackage{tabularx}
 
-% --- Code listings ---
-\usepackage{listings}
+% ============================================================
+% Code Listings
+% ============================================================
 \usepackage{xcolor}
-
+\usepackage{listings}
 \lstset{
   basicstyle=\ttfamily\small,
   breaklines=true,
@@ -42,45 +91,61 @@
   numberstyle=\tiny,
   commentstyle=\color{gray},
   keywordstyle=\color{blue},
+  showstringspaces=false
 }
 
-% --- Math ---
+% ============================================================
+% Math and Utilities
+% ============================================================
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{enumitem}
+\usepackage{csquotes}
+\usepackage{multirow}
+\usepackage{makecell}
 
-% --- Misc ---
-\usepackage{microtype}
-\usepackage{setspace}
-\usepackage{parskip}
+% ============================================================
+% Title Metadata
+% ============================================================
+\title{\papertitle}
+\author{
+  \paperauthor\\
+  \small\href{\paperorcidurl}{ORCID: \paperorcid}\\
+  \small\href{\paperrepository}{\paperrepository}
+}
+\date{\paperdate}
 
-% --- Title metadata ---
-% TODO: Replace PAPER TITLE and AUTHOR NAME
-\title{\textbf{PAPER TITLE}}
-\author{AUTHOR NAME}
-\date{\today}
-
+% ============================================================
+% Document
 % ============================================================
 \begin{document}
-% ============================================================
 
 \maketitle
-\thispagestyle{empty}
+
+\begin{center}
+  \small Version: \paperstatus
+\end{center}
 
 \begin{abstract}
   \input{sections/abstract}
 \end{abstract}
 
-\newpage
 \tableofcontents
 \newpage
 
 \input{sections/introduction}
 % TODO: Add additional section \input commands here
-
 \input{sections/future_work}
 \input{sections/conclusion}
 
-\newpage
+\nocite{*}
 \printbibliography
+
+% ============================================================
+% Appendix
+% ============================================================
+% \appendix
+% \input{sections/appendix}
 
 \end{document}
