@@ -1,45 +1,26 @@
-\documentclass[11pt, letterpaper]{article}
-
-% ============================================================
-% reflector
-% Reflective Development Systems for
-% Recursive AI-Augmented Software Engineering
-%
-% Author: Alan Szmyt
-% Repository: https://github.com/egohygiene/papers
-% ============================================================
+\documentclass[11pt,letterpaper]{article}
 
 % ============================================================
 % Encoding and Typography
 % ============================================================
-
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-
 \usepackage{lmodern}
 \usepackage{microtype}
+\usepackage[english]{babel}
 
 % ============================================================
 % Page Layout
 % ============================================================
-
-\usepackage[
-margin=1in,
-includeheadfoot,
-headheight=14pt
-]{geometry}
-
+\usepackage[margin=1in]{geometry}
 \usepackage{setspace}
-\onehalfspacing{}
-
+\onehalfspacing
 \usepackage{parskip}
 
 % ============================================================
 % Colors
 % ============================================================
-
 \usepackage[dvipsnames]{xcolor}
-
 \definecolor{reflectorblue}{HTML}{3B82F6}
 \definecolor{reflectorpurple}{HTML}{8B5CF6}
 \definecolor{reflectorgray}{HTML}{6B7280}
@@ -47,77 +28,73 @@ headheight=14pt
 \definecolor{reflectorbg}{HTML}{F8FAFC}
 
 % ============================================================
+% Metadata Commands
+% ============================================================
+\newcommand{\papertitle}{Reflector: Reflective Development Systems for Recursive AI-Augmented Software Engineering}
+\newcommand{\paperauthor}{Alan Szmyt}
+\newcommand{\paperdate}{\today}
+\newcommand{\paperstatus}{Draft}
+\newcommand{\paperrepository}{https://github.com/egohygiene/papers}
+\newcommand{\paperorcid}{0009-0008-5291-9795}
+\newcommand{\paperorcidurl}{https://orcid.org/{\paperorcid}}
+
+% ============================================================
 % Hyperlinks and PDF Metadata
 % ============================================================
-
 \usepackage[
-colorlinks=true,
-linkcolor=reflectorblue,
-citecolor=reflectorpurple,
-urlcolor=reflectorblue,
-pdfauthor={Alan Szmyt},
-pdftitle={Reflector: Reflective Development Systems for Recursive AI-Augmented Software Engineering},
-pdfsubject={AI-Augmented Software Engineering},
-pdfkeywords={
-AI,
-recursive systems,
-governance,
-human-in-the-loop,
-software engineering,
-AI agents,
-orchestration,
-recursive auditing,
-milestone synchronization,
-reflective systems
-},
-pdfcreator={LaTeX},
-pdfproducer={reflector publication pipeline}
+  unicode=true,
+  colorlinks=true,
+  linkcolor=reflectorblue,
+  citecolor=reflectorpurple,
+  urlcolor=reflectorblue,
+  pdftitle={\papertitle},
+  pdfauthor={\paperauthor},
+  pdfsubject={AI-Augmented Software Engineering},
+  pdfkeywords={
+    AI,
+    recursive systems,
+    governance,
+    human-in-the-loop,
+    software engineering,
+    recursive auditing,
+    milestone synchronization
+  },
+  pdfcreator={LaTeX},
+  pdfproducer={reflector publication pipeline}
 ]{hyperref}
 \usepackage{bookmark}
 
 % ============================================================
 % Bibliography
 % ============================================================
-
 \usepackage[
-backend=biber,
-style=ieee,
-sorting=nyt,
-giveninits=true,
-maxbibnames=99,
-doi=true,
-url=true,
-isbn=false,
-eprint=true
+  backend=biber,
+  style=ieee,
+  sorting=nyt,
+  giveninits=true,
+  maxbibnames=99,
+  doi=true,
+  url=true,
+  isbn=false,
+  eprint=true
 ]{biblatex}
-
 \addbibresource{references.bib}
 
 % ============================================================
 % Graphics and Figures
 % ============================================================
-
 \usepackage{graphicx}
-\graphicspath{
-{figures/}
-{assets/}
-{diagrams/}
-}
-
-\usepackage{float}
+\graphicspath{{figures/}{assets/}{diagrams/}}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg,.jpeg}
 \usepackage{caption}
 \usepackage{subcaption}
-
-\captionsetup{
-font=small,
-labelfont=bf,
-labelsep=period
-}
+\captionsetup{font=small,labelfont=bf,labelsep=period}
+% Accessibility note: provide descriptive captions and keep figure exports as PDF/PNG/JPG.
+% Future release tooling can map figure-level alt text metadata from canonical sources.
 
 % ============================================================
 % Tables
 % ============================================================
-
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{longtable}
@@ -126,237 +103,88 @@ labelsep=period
 % ============================================================
 % Code Listings
 % ============================================================
-
 \usepackage{listings}
-
 \lstdefinestyle{reflector}{
-backgroundcolor=\color{reflectorbg},
-basicstyle=\ttfamily\small,
-breaklines=true,
-frame=single,
-rulecolor=\color{reflectorborder},
-numbers=left,
-numberstyle=\tiny\color{reflectorgray},
-commentstyle=\color{reflectorgray},
-keywordstyle=\color{reflectorblue},
-stringstyle=\color{ForestGreen},
-showstringspaces=false,
-tabsize=2,
-columns=fullflexible
+  backgroundcolor=\color{reflectorbg},
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  rulecolor=\color{reflectorborder},
+  numbers=left,
+  numberstyle=\tiny\color{reflectorgray},
+  commentstyle=\color{reflectorgray},
+  keywordstyle=\color{reflectorblue},
+  stringstyle=\color{ForestGreen},
+  showstringspaces=false,
+  tabsize=2,
+  columns=fullflexible
 }
-
-\lstset{
-style=reflector
-}
+\lstset{style=reflector}
 
 % ============================================================
-% Math
+% Math and Utilities
 % ============================================================
-
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
-
-% ============================================================
-% Utilities
-% ============================================================
-
 \usepackage{enumitem}
 \usepackage{csquotes}
 \usepackage{multirow}
 \usepackage{makecell}
 
 % ============================================================
-% Callouts and Theorem Environments
+% Title Metadata
 % ============================================================
-
-\usepackage[most]{tcolorbox}
-
-\tcbset{
-colback=reflectorbg,
-colframe=reflectorborder,
-arc=3pt,
-boxrule=0.5pt
-}
-
-\newtcolorbox{reflectorcallout}{
-colback=reflectorbg,
-colframe=reflectorblue,
-enhanced,
-breakable,
-left=6pt,
-right=6pt,
-top=6pt,
-bottom=6pt
-}
-
-% ============================================================
-% Header and Footer
-% ============================================================
-
-\usepackage{fancyhdr}
-
-\pagestyle{fancy}
-
-\fancyhf{}
-
-\fancyhead[L]{reflector}
-\fancyhead[R]{Alan Szmyt}
-
-\fancyfoot[C]{\thepage}
-
-\renewcommand{\headrulewidth}{0.4pt}
-\renewcommand{\footrulewidth}{0pt}
-
-% ============================================================
-% Section Styling
-% ============================================================
-
-\usepackage{titlesec}
-
-\titleformat{\section}
-{\large\bfseries}
-{\thesection}
-{1em}
-{}
-
-\titleformat{\subsection}
-{\normalsize\bfseries}
-{\thesubsection}
-{1em}
-{}
-
-% ============================================================
-% Metadata Commands
-% ============================================================
-
-\newcommand{\papertitle}{
-Reflector:
-Reflective Development Systems for
-Recursive AI-Augmented Software Engineering
-}
-
-\newcommand{\paperauthor}{
-Alan Szmyt
-}
-
-\newcommand{\paperdate}{
-\today
-}
-
-\newcommand{\paperrepository}{
-https://github.com/egohygiene/papers
-}
-
-\newcommand{\paperorcid}{
-0009-0008-5291-9795
-}
-
-\newcommand{\paperorcidurl}{
-https://orcid.org/\paperorcid{}
-}
-
-% ============================================================
-% Title
-% ============================================================
-
-\title{
-\vspace{-1.5cm}
-\textbf{\Huge reflector}\\[0.35cm]
-\Large Reflective Development Systems for\\
-Recursive AI-Augmented Software Engineering
-}
-
+\title{\papertitle}
 \author{
-Alan Szmyt\\
-\small \href{\paperrepository}{github.com/egohygiene/papers}\\
-\small \href{\paperorcidurl}{ORCID: \paperorcid}
+  \paperauthor\\
+  \small\href{\paperorcidurl}{ORCID: \paperorcid}\\
+  \small\href{\paperrepository}{\paperrepository}
 }
-
 \date{\paperdate}
 
 % ============================================================
 % Document
 % ============================================================
-
 \begin{document}
-
-% ============================================================
-% Title Page
-% ============================================================
 
 \maketitle
 
-\thispagestyle{empty}
-
-\vspace{0.5cm}
-
-% \begin{abstract}
-% \input{sections/abstract}
-% \end{abstract}
-
-\vspace{0.5cm}
-
 \begin{center}
-\small
-Version: Draft \
-Repository: \href{\paperrepository}{\paperrepository}
+  \small Version: \paperstatus
 \end{center}
 
-\newpage
-
-% ============================================================
-% Table of Contents
-% ============================================================
+\begin{abstract}
+  \input{sections/abstract}
+\end{abstract}
 
 \tableofcontents
-
-% TODO \listoffigures
-
 \newpage
 
 % ============================================================
 % Main Sections
 % ============================================================
-
-% \input{sections/introduction}
-% \input{sections/recursive_development}
-% \input{sections/human_in_the_loop}
-% \input{sections/recursive_auditing}
-% \input{sections/milestone_synchronization}
-% \input{sections/governance_model}
-% \input{sections/proposed_architecture}
-% \input{sections/drift_failure_modes}
-% \input{sections/future_work}
-% \input{sections/conclusion}
-
-% ============================================================
-% Future Visual Sections
-% ============================================================
-
-% \input{sections/visual_manifest}
-% \input{sections/appendix}
-% \input{sections/implementation_examples}
+\input{sections/introduction}
+\input{sections/problem_statement}
+\input{sections/recursive_development}
+\input{sections/human_in_the_loop}
+\input{sections/recursive_auditing}
+\input{sections/milestone_synchronization}
+\input{sections/governance_model}
+\input{sections/proposed_architecture}
+\input{sections/drift_failure_modes}
+\input{sections/future_work}
+\input{sections/conclusion}
 
 % ============================================================
 % Bibliography
 % ============================================================
-
-\newpage
-
-\nocite{*}
-
 \printbibliography
 
 % ============================================================
 % Appendix
 % ============================================================
-
 % \appendix
 % \input{sections/appendix}
-
-% ============================================================
-% End Document
-% ============================================================
 
 \end{document}
